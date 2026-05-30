@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Constituent Reply Assistant — Liesl Tesch MP</title>
+
+<!-- Office JS: only loads when inside Outlook. Harmless otherwise. -->
+<script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js" type="text/javascript"></script>
+
+<style>
+  :root {
+    --red: #c0392b; --red-dark: #96281b; --red-light: #fdf0ee; --red-border: #e8b4ae;
+    --primary: #1a3a5c; --primary-light: #2c5282;
+    --bg: #f4f5f7; --surface: #fff; --surface2: #f0f2f5;
+    --border: #d1d9e0; --text: #1a202c; --text-muted: #6b7280;
+    --success: #2d7a4f; --success-bg: #e6f4ec; --success-border: #b7dfc8;
+    --warning: #b45309; --warning-bg: #fef3c7;
+    --radius: 9px; --shadow: 0 2px 10px rgba(0,0,0,0.07);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; min-height: 100vh; }
+
+  /* ── Pane mode (inside Outlook) ── */
+  body.pane-mode { background: var(--surface); }
+  body.pane-mode .standalone-only { display: none !important; }
+  body.pane-mode .main { max-width: 100%; padding: 0; }
+  body.pane-mode .pane-wrap { display: flex; flex-direction: column; height: 100vh; }
+  body.pane-mode .pane-header { background: var(--red); color: white; padding: 10px 14px; display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  body.pane-mode .pane-body { flex: 1; overflow-y: auto; padding: 14px; }
+  body.pane-mode .pane-tabs { display: flex; background: var(--red-dark); flex-shrink: 0; }
+  body.pane-mode .pane-tab { flex: 1; color: rgba(255,255,255,0.6); background: none; border: none; padding: 9px 0; font-size: 12px; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; }
+  body.pane-mode .pane-tab.active { color: white; border-bottom-color: rgba(255,255,255,0.8); }
+  body.pane-mode .pane-section { display: none; }
+  body.pane-mode .pane-section.active { display: block; }
+
+  /* ── Standalone mode (browser) ── */
+  body.standalone-mode .pane-only { display: none !important; }
+
+  /* ── Shared header (standalone) ── */
+  .header { background: var(--red); color: white; padding: 0 28px; display: flex; align-items: center; justify-content: space-between; height: 58px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .header-logo { width: 34px; height: 34px; background: rgba(255,255,255,0.18); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 800; }
+  .header-title { font-size: 16px; font-weight: 700; }
+  .header-sub { font-size: 11px; opacity: 0.65; margin-top: 1px; }
+  .offline-badge { background: rgba(255,255,255,0.22); color: white; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.3); letter-spacing: 0.4px; }
+
+  .nav { background: var(--red-dark); display: flex; padding: 0 28px; }
+  .nav-btn { color: rgba(255,255,255,0.6); background: none; border: none; padding: 10px 16px; font-size: 13px; font-weight: 500; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.15s; }
+  .nav-btn:hover { color: white; }
+  .nav-btn.active { color: white; border-bottom-color: rgba(255,255,255,0.8); }
+
+  .main { max-width: 1240px; margin: 0 auto; padding: 22px 28px; }
+  .tab { display: none; }
+  .tab.active { display: block; }
+
+  /* ── Cards ── */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 14px; box-shadow: var(--shadow); }
+  .card-title { font-size: 11px; font-weight: 700; color: var(--primary); margin-bottom: 12px; padding-bottom: 9px; border-bottom: 1px solid var(--border); text-transform: uppercase; letter-spacing: 0.4px; display: flex; align-items: center; gap: 7px; }
+
+  /* ── Forms ── */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-group { display: flex; flex-direction: column; gap: 4px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; }
+  input[type="text"], textarea, select { border: 1px solid var(--border); border-radius: 6px; padding: 7px 10px; font-size: 13px; font-family: inherit; color: var(--text); background: var(--surface); width: 100%; transition: border-color 0.15s; }
+  input:focus, textarea:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 3px rgba(192,57,43,0.1); }
+  textarea { resize: vertical; }
+
+  /* ── Buttons ── */
+  .btn { border: none; border-radius: 6px; padding: 7px 14px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; gap: 5px; }
+  .btn-red { background: var(--red); color: white; }
+  .btn-red:hover { background: var(--red-dark); }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:hover { background: var(--primary-light); }
+  .btn-outline { background: none; border: 1px solid var(--border); color: var(--text); }
+  .btn-outline:hover { background: var(--surface2); }
+  .btn-sm { padding: 5px 10px; font-size: 12px; }
+  .btn-lg { padding: 10px 20px; font-size: 14px; }
+  .btn-xs { padding: 3px 8px; font-size: 11px; background: none; border: none; cursor: pointer; color: var(--text-muted); border-radius: 4px; }
+  .btn-xs:hover { color: var(--red); background: var(--red-light); }
+
+  /* ── Email loaded banner (pane mode) ── */
+  .email-banner { background: var(--success-bg); border: 1px solid var(--success-border); border-radius: 7px; padding: 10px 12px; margin-bottom: 12px; }
+  .email-banner-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--success); margin-bottom: 4px; letter-spacing: 0.4px; }
+  .email-banner-subject { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .email-banner-from { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .email-banner-loading { color: var(--text-muted); font-size: 13px; font-style: italic; }
+  .email-banner-error { background: var(--red-light); border-color: var(--red-border); }
+  .email-banner-error .email-banner-label { color: var(--red); }
+
+  /* ── Sentiment ── */
+  .sentiment-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 5px; }
+  .s-btn { padding: 4px 11px; border-radius: 16px; font-size: 11px; font-weight: 700; cursor: pointer; border: 2px solid transparent; background: var(--surface2); color: var(--text-muted); transition: all 0.15s; }
+  .s-btn[data-v="Positive"].on  { background: var(--success);  color: white; }
+  .s-btn[data-v="Neutral"].on   { background: var(--primary);   color: white; }
+  .s-btn[data-v="Persuadable"].on { background: var(--warning); color: #1a202c; }
+  .s-btn[data-v="Hostile"].on   { background: #7f1d1d;           color: white; }
+
+  /* ── Reply area ── */
+  .reply-area { background: #fafbfc; border: 1px solid var(--border); border-radius: 7px; padding: 14px; font-size: 13px; line-height: 1.75; min-height: 300px; white-space: pre-wrap; font-family: inherit; cursor: text; }
+  .reply-area[contenteditable]:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 3px rgba(192,57,43,0.1); }
+  .reply-placeholder { color: var(--text-muted); font-style: italic; }
+
+  /* ── Tone strip ── */
+  .tone-strip { background: var(--surface2); border-left: 3px solid var(--red); padding: 8px 12px; font-size: 12px; color: var(--text-muted); margin-bottom: 10px; border-radius: 0 6px 6px 0; }
+  .tone-strip-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--red); margin-bottom: 3px; }
+
+  /* ── Analysis ── */
+  .topic-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+  .topic-chip { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 10px; background: var(--primary); color: white; }
+  .topic-chip.low { background: var(--text-muted); }
+  .signal-list { margin-top: 8px; display: flex; flex-direction: column; gap: 3px; }
+  .signal-item { font-size: 12px; color: var(--text-muted); }
+  .referral-box { background: var(--warning-bg); border: 1px solid #fcd34d; border-radius: 6px; padding: 10px 12px; margin-top: 8px; }
+  .referral-title { font-size: 10px; font-weight: 700; color: var(--warning); text-transform: uppercase; margin-bottom: 6px; }
+  .referral-item { font-size: 12px; margin-bottom: 3px; }
+
+  /* ── CRM ── */
+  .crm-card { border: 1px solid var(--red-border); background: var(--red-light); border-radius: var(--radius); padding: 14px; margin-bottom: 14px; }
+  .crm-title { font-size: 11px; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 10px; }
+  .crm-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+  .crm-label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-muted); width: 80px; flex-shrink: 0; padding-top: 2px; }
+  .crm-tag { display: inline-block; background: var(--primary); color: white; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 3px; margin-right: 4px; }
+  .crm-peninsula { background: var(--warning); color: #1a202c; }
+  .crm-next { background: var(--success-bg); border: 1px solid var(--success-border); border-radius: 6px; padding: 9px 11px; font-size: 12px; margin-top: 6px; }
+  .crm-next-label { font-size: 10px; font-weight: 700; color: var(--success); text-transform: uppercase; margin-bottom: 3px; }
+
+  /* ── Policies (shared) ── */
+  .policy-list { display: flex; flex-direction: column; gap: 10px; }
+  .policy-item { border: 1px solid var(--border); border-radius: 7px; overflow: hidden; }
+  .policy-header { padding: 10px 14px; background: var(--surface2); display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
+  .policy-header-left { display: flex; align-items: center; gap: 8px; }
+  .policy-area-tag { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 10px; background: var(--red); color: white; }
+  .policy-name-text { font-weight: 600; font-size: 13px; }
+  .policy-meta { font-size: 11px; color: var(--text-muted); }
+  .policy-body { padding: 14px; display: none; }
+  .policy-body.open { display: block; }
+  .chev { transition: transform 0.2s; font-size: 10px; color: var(--text-muted); }
+  .chev.open { transform: rotate(180deg); }
+  .wins-list { display: flex; flex-direction: column; gap: 5px; margin-top: 6px; }
+  .win-item { display: flex; align-items: flex-start; gap: 7px; background: var(--success-bg); border: 1px solid var(--success-border); border-radius: 5px; padding: 6px 9px; font-size: 12px; }
+  .service-list { display: flex; flex-direction: column; gap: 5px; margin-top: 6px; }
+  .service-item { background: var(--warning-bg); border: 1px solid #fcd34d; border-radius: 5px; padding: 6px 9px; font-size: 12px; display: flex; align-items: flex-start; gap: 7px; }
+  .kw-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+  .kw-tag { background: var(--surface2); border: 1px solid var(--border); border-radius: 3px; padding: 2px 7px; font-size: 11px; display: flex; align-items: center; gap: 3px; }
+  .kw-input-row { display: flex; gap: 6px; margin-top: 6px; }
+
+  /* ── Draft layout (standalone: 2-col) ── */
+  .draft-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+  .draft-col { display: flex; flex-direction: column; gap: 12px; }
+
+  /* ── Saved ── */
+  .saved-list { display: flex; flex-direction: column; gap: 9px; }
+  .saved-item { border: 1px solid var(--border); border-radius: 7px; padding: 12px 14px; background: var(--surface); cursor: pointer; transition: border-color 0.15s; }
+  .saved-item:hover { border-color: var(--red); }
+  .saved-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+  .saved-tag { background: var(--surface2); border: 1px solid var(--border); border-radius: 3px; padding: 1px 6px; font-size: 10px; }
+
+  /* ── Steps (standalone) ── */
+  .steps { display: flex; margin-bottom: 18px; }
+  .step { flex: 1; display: flex; align-items: center; gap: 7px; padding: 10px 14px; background: var(--surface); border: 1px solid var(--border); border-right: none; font-size: 12px; color: var(--text-muted); }
+  .step:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+  .step:last-child { border-right: 1px solid var(--border); border-radius: 0 var(--radius) var(--radius) 0; }
+  .step.done { background: var(--success-bg); border-color: var(--success-border); color: var(--success); }
+  .step-num { width: 18px; height: 18px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: var(--text-muted); flex-shrink: 0; }
+  .step.done .step-num { background: var(--success); color: white; }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 12px 0; }
+  .section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--text-muted); margin-bottom: 6px; }
+  .flex-between { display: flex; justify-content: space-between; align-items: center; }
+  .mt-10 { margin-top: 10px; }
+  .mt-12 { margin-top: 12px; }
+  .empty-state { text-align: center; padding: 40px 16px; color: var(--text-muted); }
+  .empty-icon { font-size: 38px; margin-bottom: 8px; }
+
+  .toast { position: fixed; bottom: 16px; right: 16px; background: var(--text); color: white; padding: 9px 16px; border-radius: 7px; font-size: 12px; font-weight: 500; opacity: 0; transform: translateY(6px); transition: all 0.2s; z-index: 9999; pointer-events: none; }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast.success { background: var(--success); }
+
+  @media(max-width:700px){ .draft-layout{grid-template-columns:1fr;} .main{padding:12px;} .steps{flex-direction:column;} .step{border-right:1px solid var(--border);border-bottom:none;} .step:last-child{border-bottom:1px solid var(--border);} }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     PANE MODE: shown inside Outlook
+     ════════════════════════════════════════ -->
+<div class="pane-wrap pane-only">
+  <div class="pane-header">
+    <div style="width:28px;height:28px;background:rgba(255,255,255,0.2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:white;flex-shrink:0;">L</div>
+    <div>
+      <div style="font-size:13px;font-weight:700;color:white;">Constituent Reply</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.65);">Liesl Tesch MP — Gosford</div>
+    </div>
+    <div style="margin-left:auto;font-size:10px;font-weight:700;background:rgba(255,255,255,0.18);color:white;padding:2px 7px;border-radius:4px;border:1px solid rgba(255,255,255,0.25);">OFFLINE</div>
+  </div>
+
+  <div class="pane-tabs">
+    <button class="pane-tab active" onclick="paneTab('draft',this)">✉ Draft</button>
+    <button class="pane-tab" onclick="paneTab('policies',this)">📋 Policies</button>
+    <button class="pane-tab" onclick="paneTab('saved',this)">📁 Saved</button>
+    <button class="pane-tab" onclick="paneTab('profile',this)">⚙ Profile</button>
+  </div>
+
+  <div class="pane-body">
+
+    <!-- PANE: Draft -->
+    <div class="pane-section active" id="pane-draft">
+
+      <!-- Email loaded banner -->
+      <div class="email-banner" id="pane-email-banner">
+        <div class="email-banner-label">Loading email…</div>
+        <div class="email-banner-loading" id="pane-banner-loading">Reading from Outlook…</div>
+      </div>
+
+      <div class="form-group mt-10">
+        <label>Constituent Name <span style="font-weight:400;font-style:normal;">(auto-detected)</span></label>
+        <input type="text" id="pane-name" placeholder="Auto-detected from email…">
+      </div>
+
+      <div class="form-group mt-10">
+        <label>Suburb</label>
+        <input type="text" id="pane-suburb" placeholder="e.g. Woy Woy">
+      </div>
+
+      <div class="mt-10">
+        <label class="section-label">Constituent Sentiment</label>
+        <div class="sentiment-row" id="pane-sentiment">
+          <button class="s-btn on" data-v="Positive"    onclick="pSent('Positive',this)">Positive</button>
+          <button class="s-btn"    data-v="Neutral"     onclick="pSent('Neutral',this)">Neutral</button>
+          <button class="s-btn"    data-v="Persuadable" onclick="pSent('Persuadable',this)">Persuadable</button>
+          <button class="s-btn"    data-v="Hostile"     onclick="pSent('Hostile',this)">Hostile</button>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:7px;margin-top:14px;">
+        <button class="btn btn-red btn-lg" onclick="paneDraft()" style="flex:1;">✨ Draft Reply</button>
+        <button class="btn btn-outline btn-sm" onclick="paneReload()">↻</button>
+      </div>
+
+      <!-- Analysis (pane) -->
+      <div id="pane-analysis" style="display:none;margin-top:12px;">
+        <div class="card" style="padding:12px;">
+          <div class="card-title" style="margin-bottom:8px;">🔍 Analysis</div>
+          <div id="pane-analysis-body"></div>
+        </div>
+      </div>
+
+      <!-- Draft output (pane) -->
+      <div id="pane-draft-out" style="display:none;margin-top:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <div style="font-size:11px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:0.4px;">Draft Reply</div>
+          <div style="display:flex;gap:5px;">
+            <button class="btn btn-outline btn-sm" onclick="paneRegen('warm')">Warmer</button>
+            <button class="btn btn-outline btn-sm" onclick="paneRegen('direct')">Direct</button>
+            <button class="btn btn-outline btn-sm" onclick="paneRegen('service')">Service</button>
+          </div>
+        </div>
+        <div class="tone-strip" id="pane-tone-strip" style="display:none;font-size:11px;">
+          <div class="tone-strip-label">Tone Reminder</div>
+          <div id="pane-tone-text"></div>
+        </div>
+        <div class="reply-area" id="pane-reply" contenteditable="true"></div>
+        <div style="display:flex;gap:7px;margin-top:8px;flex-wrap:wrap;">
+          <button class="btn btn-red" onclick="paneCopy()" style="flex:1;">📋 Copy Reply</button>
+          <button class="btn btn-outline" onclick="paneSave()">💾 Save</button>
+        </div>
+      </div>
+
+      <!-- CRM (pane) -->
+      <div class="crm-card mt-12" id="pane-crm" style="display:none;">
+        <div class="crm-title">📊 CRM / Funnel</div>
+        <div id="pane-crm-body"></div>
+      </div>
+    </div>
+
+    <!-- PANE: Policies -->
+    <div class="pane-section" id="pane-policies">
+      <div class="flex-between" style="margin-bottom:10px;">
+        <div style="font-size:13px;font-weight:700;">Policy Areas</div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn btn-outline btn-sm" onclick="loadDefaultPolicies()">Load defaults</button>
+          <button class="btn btn-red btn-sm" onclick="addPolicy()">+ Add</button>
+        </div>
+      </div>
+      <div class="policy-list" id="pane-policy-list"></div>
+      <button class="btn btn-red" style="width:100%;margin-top:12px;" onclick="savePolicies()">💾 Save Policies</button>
+    </div>
+
+    <!-- PANE: Saved -->
+    <div class="pane-section" id="pane-saved">
+      <div class="flex-between" style="margin-bottom:10px;">
+        <div style="font-size:13px;font-weight:700;">Saved Drafts</div>
+        <button class="btn btn-outline btn-sm" onclick="clearSaved()">Clear all</button>
+      </div>
+      <div class="saved-list" id="pane-saved-list"></div>
+    </div>
+
+    <!-- PANE: Profile -->
+    <div class="pane-section" id="pane-profile">
+      <div style="font-size:13px;font-weight:700;margin-bottom:12px;">MP Profile</div>
+      <div class="form-group"><label>Full Name</label><input type="text" id="p-mp-name" placeholder="Liesl Tesch AM MP"></div>
+      <div class="form-group mt-10"><label>Phone</label><input type="text" id="p-mp-phone" placeholder="(02) 4322 2066"></div>
+      <div class="form-group mt-10"><label>Email</label><input type="text" id="p-mp-email" placeholder="gosford@parliament.nsw.gov.au"></div>
+      <div class="form-group mt-10"><label>Tone Description</label><textarea id="p-mp-tone" rows="4" placeholder="How Liesl speaks…"></textarea></div>
+      <div class="form-group mt-10"><label>Standard Opening</label><textarea id="p-mp-opening" rows="2"></textarea></div>
+      <div class="form-group mt-10"><label>Offer of Help</label><textarea id="p-mp-offer" rows="2"></textarea></div>
+      <div class="form-group mt-10"><label>Signature Block</label><textarea id="p-mp-signature" rows="4"></textarea></div>
+      <div style="display:flex;gap:7px;margin-top:14px;">
+        <button class="btn btn-red" style="flex:1;" onclick="savePaneProfile()">💾 Save</button>
+        <button class="btn btn-outline btn-sm" onclick="loadDefaultProfile()">Load defaults</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     STANDALONE MODE: full browser
+     ════════════════════════════════════════ -->
+<div class="standalone-only">
+  <div class="header">
+    <div class="header-left">
+      <div class="header-logo">L</div>
+      <div>
+        <div class="header-title">Constituent Reply Assistant</div>
+        <div class="header-sub">Liesl Tesch MP — Member for Gosford</div>
+      </div>
+    </div>
+    <div class="offline-badge">⚫ OFFLINE · PRIVATE</div>
+  </div>
+
+  <div class="nav">
+    <button class="nav-btn active" onclick="showTab('draft',this)">✉ Draft Reply</button>
+    <button class="nav-btn" onclick="showTab('profile',this)">👤 Profile</button>
+    <button class="nav-btn" onclick="showTab('policies',this)">📋 Policy Areas</button>
+    <button class="nav-btn" onclick="showTab('saved',this)">📁 Saved Drafts</button>
+  </div>
+
+  <div class="main">
+
+    <!-- STANDALONE: Draft tab -->
+    <div class="tab active" id="tab-draft">
+      <div class="steps">
+        <div class="step" id="step1"><div class="step-num">1</div>Paste email</div>
+        <div class="step" id="step2"><div class="step-num">2</div>Analyse</div>
+        <div class="step" id="step3"><div class="step-num">3</div>Review &amp; copy</div>
+      </div>
+      <div class="draft-layout">
+        <div class="draft-col">
+          <div class="card">
+            <div class="card-title">📩 Constituent Email</div>
+            <div class="form-grid">
+              <div class="form-group"><label>Constituent Name <span style="font-weight:400;font-style:italic;">(auto-detected)</span></label><input type="text" id="s-name" placeholder="Read from email…"></div>
+              <div class="form-group"><label>Suburb</label><input type="text" id="s-suburb" placeholder="e.g. Woy Woy"></div>
+            </div>
+            <div class="form-group mt-10"><label>Email Subject</label><input type="text" id="s-subject" placeholder="e.g. Public housing repair request"></div>
+            <div class="form-group mt-10"><label>Email Content *</label><textarea id="s-email" rows="11" placeholder="Paste the full email here…" oninput="sEmailInput()"></textarea></div>
+            <div class="mt-10">
+              <label class="section-label">Constituent Sentiment</label>
+              <div class="sentiment-row" id="s-sentiment">
+                <button class="s-btn on" data-v="Positive"    onclick="sSent('Positive',this)">Positive</button>
+                <button class="s-btn"    data-v="Neutral"     onclick="sSent('Neutral',this)">Neutral</button>
+                <button class="s-btn"    data-v="Persuadable" onclick="sSent('Persuadable',this)">Persuadable</button>
+                <button class="s-btn"    data-v="Hostile"     onclick="sSent('Hostile',this)">Hostile</button>
+              </div>
+            </div>
+            <div style="display:flex;gap:7px;margin-top:14px;">
+              <button class="btn btn-red btn-lg" onclick="sDraft()" style="flex:1;">✨ Draft Reply</button>
+              <button class="btn btn-outline" onclick="sClear()">Clear</button>
+            </div>
+          </div>
+          <div class="card" id="s-analysis-card" style="display:none;">
+            <div class="card-title">🔍 Analysis</div>
+            <div id="s-analysis-body"></div>
+          </div>
+          <div class="crm-card" id="s-crm-card" style="display:none;">
+            <div class="crm-title">📊 CRM / Funnel Actions</div>
+            <div id="s-crm-body"></div>
+          </div>
+        </div>
+        <div class="draft-col">
+          <div class="card">
+            <div class="card-title" style="margin-bottom:8px;">📝 Draft Reply <span id="s-draft-status" style="margin-left:auto;font-size:11px;"></span></div>
+            <div class="tone-strip" id="s-tone-strip" style="display:none;">
+              <div class="tone-strip-label">Tone Reminder</div>
+              <div id="s-tone-text"></div>
+            </div>
+            <div class="reply-area" id="s-reply" contenteditable="true"><span class="reply-placeholder">Your draft will appear here. Edit directly before copying.</span></div>
+            <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px;">
+              <button class="btn btn-red" onclick="sCopy()">📋 Copy</button>
+              <button class="btn btn-outline" onclick="sSaveDraft()">💾 Save</button>
+              <button class="btn btn-outline btn-sm" onclick="sRegen('warm')">Warmer</button>
+              <button class="btn btn-outline btn-sm" onclick="sRegen('direct')">Direct</button>
+              <button class="btn btn-outline btn-sm" onclick="sRegen('service')">Service-first</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STANDALONE: Profile tab -->
+    <div class="tab" id="tab-profile">
+      <div class="card">
+        <div class="card-title">👤 MP Profile</div>
+        <div class="form-grid">
+          <div class="form-group"><label>Full Name</label><input type="text" id="mp-name" placeholder="Liesl Tesch AM MP"></div>
+          <div class="form-group"><label>Electorate</label><input type="text" id="mp-electorate" placeholder="Gosford"></div>
+          <div class="form-group"><label>Party</label><input type="text" id="mp-party" placeholder="NSW Labor"></div>
+          <div class="form-group"><label>Role</label><input type="text" id="mp-role" placeholder="Member for Gosford"></div>
+          <div class="form-group"><label>Phone</label><input type="text" id="mp-phone" placeholder="(02) 4322 2066"></div>
+          <div class="form-group"><label>Email</label><input type="text" id="mp-email" placeholder="gosford@parliament.nsw.gov.au"></div>
+          <div class="form-group full"><label>Tone Description</label><textarea id="mp-tone" rows="3" placeholder="How Liesl speaks…"></textarea></div>
+          <div class="form-group"><label>Standard Opening</label><textarea id="mp-opening" rows="2"></textarea></div>
+          <div class="form-group"><label>Offer of Help</label><textarea id="mp-offer" rows="2"></textarea></div>
+          <div class="form-group full"><label>Signature Block</label><textarea id="mp-signature" rows="4"></textarea></div>
+        </div>
+        <div style="margin-top:14px;display:flex;gap:8px;">
+          <button class="btn btn-red" onclick="saveProfile()">💾 Save Profile</button>
+          <button class="btn btn-outline" onclick="loadDefaultProfile()">Load Liesl Defaults</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STANDALONE: Policies tab -->
+    <div class="tab" id="tab-policies">
+      <div class="flex-between" style="margin-bottom:12px;">
+        <div><div style="font-size:17px;font-weight:700;">Policy Areas &amp; Wins</div><div style="color:var(--text-muted);font-size:12px;margin-top:3px;">Keywords trigger matching; wins and services appear in replies.</div></div>
+        <div style="display:flex;gap:7px;"><button class="btn btn-outline btn-sm" onclick="loadDefaultPolicies()">Load NSW Labor defaults</button><button class="btn btn-red" onclick="addPolicy()">+ Add</button></div>
+      </div>
+      <div class="policy-list" id="s-policy-list"></div>
+      <button class="btn btn-red" style="margin-top:14px;" onclick="savePolicies()">💾 Save Policies</button>
+    </div>
+
+    <!-- STANDALONE: Saved tab -->
+    <div class="tab" id="tab-saved">
+      <div class="flex-between" style="margin-bottom:12px;">
+        <div style="font-size:17px;font-weight:700;">Saved Drafts</div>
+        <button class="btn btn-outline btn-sm" onclick="clearSaved()">Clear all</button>
+      </div>
+      <div class="saved-list" id="s-saved-list"></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+//  GLOBALS
+// ══════════════════════════════════════════════════════════
+let isPane = false;         // true when running inside Outlook
+let profile = {};
+let policies = [];
+let saved = [];
+let sCurrentSent = 'Positive';
+let pCurrentSent = 'Positive';
+let pLastAnalysis = null;
+let pLastEmailText = '';
+let sLastAnalysis = null;
+let sLastEmailText = '';
+
+// ══════════════════════════════════════════════════════════
+//  OFFICE.JS INIT — detects if we're inside Outlook
+// ══════════════════════════════════════════════════════════
+Office.onReady(function(info) {
+  if (info && info.host === Office.HostType.Outlook) {
+    isPane = true;
+    document.body.classList.add('pane-mode');
+    paneInit();
+  } else {
+    standaloneInit();
+  }
+}).catch(function() {
+  // Office.js not available — pure standalone mode
+  standaloneInit();
+});
+
+// Fallback: if Office.js never fires (not inside Office at all)
+setTimeout(function() {
+  if (!document.body.classList.contains('pane-mode') && !document.body.classList.contains('standalone-mode')) {
+    standaloneInit();
+  }
+}, 1500);
+
+// ══════════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════════
+function standaloneInit() {
+  document.body.classList.add('standalone-mode');
+  loadData();
+  renderProfileForm();
+  renderPolicies(false);
+  renderSaved(false);
+  updateToneStrip(false);
+}
+
+function paneInit() {
+  loadData();
+  renderPolicies(true);
+  renderSaved(true);
+  syncPaneProfile();
+  updateToneStrip(true);
+  // Auto-load email
+  loadEmailFromOutlook();
+}
+
+function loadData() {
+  profile  = JSON.parse(localStorage.getItem('lt_profile')  || '{}');
+  policies = JSON.parse(localStorage.getItem('lt_policies') || '[]');
+  saved    = JSON.parse(localStorage.getItem('lt_saved')    || '[]');
+  if (!profile.name)   { loadDefaultProfile(true); }
+  if (!policies.length){ loadDefaultPolicies(true); }
+}
+
+// ══════════════════════════════════════════════════════════
+//  OUTLOOK EMAIL READER
+// ══════════════════════════════════════════════════════════
+function loadEmailFromOutlook() {
+  if (!isPane) return;
+  const item = Office.context.mailbox.item;
+  if (!item) { showBannerError('Could not read email. Try clicking ↻.'); return; }
+
+  const subject = item.subject || '';
+  const fromName = item.from ? item.from.displayName : '';
+  const fromAddr = item.from ? item.from.emailAddress : '';
+
+  item.body.getAsync(Office.CoercionType.Text, {}, function(result) {
+    if (result.status !== Office.AsyncResultStatus.Succeeded) {
+      showBannerError('Could not read email body. Try clicking ↻.');
+      return;
+    }
+
+    const bodyText = result.value || '';
+    pLastEmailText = bodyText;
+
+    // Show banner
+    const banner = document.getElementById('pane-email-banner');
+    banner.classList.remove('email-banner-error');
+    banner.innerHTML = `
+      <div class="email-banner-label">✓ Email loaded</div>
+      <div class="email-banner-subject">${esc(subject || '(No subject)')}</div>
+      <div class="email-banner-from">From: ${esc(fromName)}${fromAddr ? ' &lt;'+esc(fromAddr)+'&gt;' : ''}</div>
+    `;
+
+    // Auto-detect name
+    const detected = extractName(bodyText) || fromName;
+    const nameField = document.getElementById('pane-name');
+    if (!nameField.value && detected) nameField.value = detected;
+
+    // Auto-detect suburb
+    const detectedSuburb = extractSuburb(bodyText);
+    const suburbField = document.getElementById('pane-suburb');
+    if (!suburbField.value && detectedSuburb) suburbField.value = detectedSuburb;
+
+    // Auto-suggest sentiment
+    const analysis = analyseEmail(bodyText);
+    if (analysis.hasNeg) pSetSent('Persuadable');
+    else if (analysis.hasPos) pSetSent('Positive');
+  });
+}
+
+function paneReload() {
+  document.getElementById('pane-name').value = '';
+  document.getElementById('pane-suburb').value = '';
+  document.getElementById('pane-email-banner').innerHTML = `<div class="email-banner-label">Loading…</div><div class="email-banner-loading">Reading from Outlook…</div>`;
+  loadEmailFromOutlook();
+}
+
+function showBannerError(msg) {
+  const banner = document.getElementById('pane-email-banner');
+  banner.classList.add('email-banner-error');
+  banner.innerHTML = `<div class="email-banner-label">Error</div><div style="font-size:12px;">${esc(msg)}</div>`;
+}
+
+// ══════════════════════════════════════════════════════════
+//  TABS (standalone)
+// ══════════════════════════════════════════════════════════
+function showTab(name, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  if (btn) btn.classList.add('active'); else document.querySelector('.nav-btn').classList.add('active');
+}
+
+// Pane tabs
+function paneTab(name, btn) {
+  document.querySelectorAll('.pane-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.pane-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('pane-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// ══════════════════════════════════════════════════════════
+//  SENTIMENT
+// ══════════════════════════════════════════════════════════
+function sSent(v, btn) { sCurrentSent = v; document.querySelectorAll('#s-sentiment .s-btn').forEach(b=>b.classList.toggle('on',b===btn)); }
+function pSent(v, btn) { pCurrentSent = v; document.querySelectorAll('#pane-sentiment .s-btn').forEach(b=>b.classList.toggle('on',b===btn)); }
+function pSetSent(v) { pCurrentSent = v; document.querySelectorAll('#pane-sentiment .s-btn').forEach(b=>b.classList.toggle('on',b.dataset.v===v)); }
+
+// ══════════════════════════════════════════════════════════
+//  EMAIL ANALYSIS ENGINE
+// ══════════════════════════════════════════════════════════
+function extractName(text) {
+  if (!text) return null;
+  const patterns = [
+    /my name is ([A-Z][a-zA-Z''\-]+(?: [A-Z][a-zA-Z''\-]+)?)/i,
+    /i(?:'m| am) ([A-Z][a-zA-Z''\-]+(?: [A-Z][a-zA-Z''\-]+)?)(?:,| and| from| a | —)/i,
+    /(?:regards|kind regards|sincerely|cheers|thanks|thank you|yours sincerely|yours faithfully),?\s*\n+\s*([A-Z][a-zA-Z''\-]+(?: [A-Z][a-zA-Z''\-]+)?)\s*(?:\n|$)/im,
+  ];
+  for (const p of patterns) { const m = text.match(p); if (m && m[1]) return m[1].trim(); }
+  return null;
+}
+
+function extractSuburb(text) {
+  if (!text) return null;
+  const suburbs = ['woy woy','umina beach','umina','ettalong beach','ettalong','gosford','wyong','terrigal','erina','avoca beach','avoca','kariong','kincumber','saratoga','wamberal','macmasters beach','macmasters','point clare','east gosford','north gosford','west gosford','narara','niagara park','lisarow','ourimbah','tuggerah','berkeley vale','blue haven','san remo','lake haven','kanwal','gorokan','budgewoi','toukley','killarney vale','bateau bay','long jetty','tumbi umbi','chittaway bay','tuggerawong'];
+  const lower = text.toLowerCase();
+  for (const s of suburbs) { if (lower.includes(s)) return s.replace(/\b\w/g,c=>c.toUpperCase()); }
+  return null;
+}
+
+function isPeninsula(suburb) {
+  if (!suburb) return false;
+  return ['woy woy','umina','ettalong'].some(s => suburb.toLowerCase().includes(s));
+}
+
+function analyseEmail(text) {
+  const lower = text.toLowerCase();
+  const matched = [];
+  policies.forEach((pol, i) => {
+    const hits = (pol.keywords||[]).filter(kw => lower.includes(kw.toLowerCase()));
+    if (hits.length) matched.push({ pol, i, hits, score: hits.length });
+  });
+  matched.sort((a,b) => b.score - a.score);
+  const negWords = ['angry','frustrated','outraged','disgusted','disappointed','unacceptable','failed','failing','useless','ridiculous','incompetent','demand','complaint','disgrace','appalling','furious','sick of','fed up','nothing has been done','nobody cares','ignored','no response','still waiting','not good enough','absolutely'];
+  const posWords = ['thank you','thanks for','appreciate','grateful','well done','great work','support','keep up','pleased','happy with','impressed','wonderful'];
+  const serviceWords = ['not working','broken','repair','fix','waiting for','weeks','months','no response','called','rang','still nothing','case number','reference number','been told to call','no-one has'];
+  const questionWords = ['what is','what are','how do','when will','can you tell','please explain','wondering','could you clarify'];
+  return {
+    matched: matched.slice(0,3),
+    hasNeg: negWords.some(w=>lower.includes(w)),
+    hasPos: posWords.some(w=>lower.includes(w)),
+    needsService: serviceWords.some(w=>lower.includes(w)),
+    hasQuestion: questionWords.some(w=>lower.includes(w)),
+  };
+}
+
+// ══════════════════════════════════════════════════════════
+//  DRAFT ENGINE
+// ══════════════════════════════════════════════════════════
+function buildDraft(emailText, analysis, firstName, mode) {
+  const greeting = firstName ? `Dear ${firstName.split(' ')[0]},` : 'Dear Constituent,';
+  const p = profile;
+  const sig     = p.signature || `Warm regards,\nLiesl Tesch AM MP\nMember for Gosford`;
+  const offer   = p.offer     || 'If there\'s anything more I can do, please call my office directly on (02) 4322 2066.';
+  const opening = p.opening   || 'Thank you for getting in touch with my office.';
+  const topMatch = analysis.matched[0];
+  const hasMatch = !!topMatch;
+
+  // Opening
+  let open;
+  if (mode === 'warm') {
+    open = analysis.hasNeg
+      ? `${greeting}\n\nI really appreciate you writing to me, and I want to start by saying — I hear you. What you've described sounds genuinely difficult, and it shouldn't have to be this hard.`
+      : `${greeting}\n\nThank you for reaching out. It genuinely means a lot to hear directly from people in our community.`;
+  } else if (mode === 'direct') {
+    open = `${greeting}\n\nThank you for writing.`;
+  } else {
+    open = analysis.hasNeg
+      ? `${greeting}\n\n${opening}\n\nI can hear how frustrated you are, and I don't take that lightly.`
+      : `${greeting}\n\n${opening}`;
+  }
+
+  // Issue acknowledgment
+  let ack = '';
+  if (hasMatch && mode !== 'direct') {
+    ack = analysis.hasNeg
+      ? `\n\nThe issue you've raised about ${topMatch.pol.name.toLowerCase().replace('&amp;','&')} is something I hear from people right across Gosford, and it's a genuine priority for me.`
+      : `\n\nYou've raised an important issue and I want to make sure you get a genuinely useful response — not just a letter.`;
+  }
+
+  // Service referrals (lead with these if constituent has a service problem)
+  let serviceSection = '';
+  const services = hasMatch ? (topMatch.pol.services||[]) : [];
+  if (services.length && (analysis.needsService || mode==='service')) {
+    serviceSection = `\n\n${mode==='service' ? 'The most direct path to resolving this:' : 'The best immediate contacts for your situation:'}\n`;
+    services.forEach(s => {
+      serviceSection += `\n• ${s.name}${s.number ? ' — ' + s.number : ''}${s.note ? ': ' + s.note : ''}`;
+    });
+    serviceSection += `\n\nIf you're not getting traction through those channels, my office can advocate directly with the relevant agency on your behalf. Please call us on ${p.phone || '(02) 4322 2066'}.`;
+  }
+
+  // Policy wins
+  let policySection = '';
+  if (hasMatch && mode !== 'service') {
+    const pol = topMatch.pol;
+    if (pol.keyMessage) policySection += `\n\n${pol.keyMessage.replace(/&amp;/g,'&')}`;
+    const wins = (pol.wins||[]).slice(0, mode==='direct' ? 2 : 3);
+    if (wins.length) { policySection += ` Here's some of what we've delivered:\n`; wins.forEach(w=>{ policySection += `\n• ${w}`; }); }
+    if (analysis.matched.length > 1 && mode !== 'direct') {
+      const p2 = analysis.matched[1].pol;
+      if (p2.keyMessage) policySection += `\n\nOn ${p2.name.toLowerCase().replace(/&amp;/g,'&')}: ${p2.keyMessage.replace(/&amp;/g,'&')}`;
+    }
+  } else if (!hasMatch) {
+    policySection = `\n\nWhile this sits outside my specific policy areas, I want you to know that I'm listening. Your concern is noted and I'll continue to raise issues like this on behalf of our community.`;
+  }
+
+  // Default: add service contacts after policy if not already included
+  if (hasMatch && !serviceSection && services.length && mode === 'default') {
+    serviceSection = `\n\nIf you need direct assistance, the best contacts are:`;
+    services.slice(0,2).forEach(s => { serviceSection += `\n• ${s.name}${s.number?' — '+s.number:''}${s.note?': '+s.note:''}`; });
+  }
+
+  const body = mode === 'service'
+    ? `${open}${ack}${serviceSection}${policySection}`
+    : `${open}${ack}${policySection}${serviceSection}`;
+
+  return `${body}\n\n${offer}\n\n${sig}`;
+}
+
+// ══════════════════════════════════════════════════════════
+//  PANE DRAFT ACTIONS
+// ══════════════════════════════════════════════════════════
+function paneDraft(mode) {
+  if (!pLastEmailText) { toast('No email loaded yet — click ↻ to reload.'); return; }
+  mode = mode || 'default';
+  const analysis = analyseEmail(pLastEmailText);
+  pLastAnalysis = analysis;
+  const firstName = v('pane-name');
+
+  // Render analysis
+  const ac = document.getElementById('pane-analysis');
+  const ab = document.getElementById('pane-analysis-body');
+  ac.style.display = 'block';
+  ab.innerHTML = buildAnalysisHTML(analysis, false);
+
+  // Build & show draft
+  const draft = buildDraft(pLastEmailText, analysis, firstName, mode);
+  const out = document.getElementById('pane-draft-out');
+  const reply = document.getElementById('pane-reply');
+  out.style.display = 'block';
+  reply.textContent = draft;
+
+  // CRM
+  showCRM(true, analysis);
+
+  // Tone strip
+  if (profile.tone) {
+    document.getElementById('pane-tone-strip').style.display = 'block';
+    document.getElementById('pane-tone-text').textContent = profile.tone;
+  }
+}
+
+function paneRegen(mode) { if (!pLastEmailText) { toast('Draft first.'); return; } paneDraft(mode); }
+
+function paneCopy() {
+  const el = document.getElementById('pane-reply');
+  const text = el.innerText || el.textContent;
+  if (!text) { toast('Nothing to copy.'); return; }
+  navigator.clipboard.writeText(text).catch(()=>{ const ta=Object.assign(document.createElement('textarea'),{value:text}); document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); });
+  toast('Copied ✓', 'success');
+}
+
+function paneSave() {
+  const el = document.getElementById('pane-reply');
+  const text = el.innerText || el.textContent;
+  if (!text) { toast('Nothing to save.'); return; }
+  const item = isPane ? Office.context.mailbox.item : null;
+  saved.unshift({
+    id: Date.now(),
+    subject: item ? (item.subject||'') : '',
+    name: v('pane-name') || v('s-name') || 'Unknown',
+    suburb: v('pane-suburb'),
+    sentiment: pCurrentSent,
+    tags: pLastAnalysis ? pLastAnalysis.matched.map(m=>m.pol.name.replace(/&amp;/g,'&')) : [],
+    text,
+    date: new Date().toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}),
+  });
+  localStorage.setItem('lt_saved', JSON.stringify(saved));
+  renderSaved(true);
+  if (!isPane) renderSaved(false);
+  toast('Saved ✓','success');
+}
+
+// ══════════════════════════════════════════════════════════
+//  STANDALONE DRAFT ACTIONS
+// ══════════════════════════════════════════════════════════
+function sDraft(mode) {
+  const emailText = v('s-email');
+  if (!emailText) { toast('Paste the constituent\'s email first.'); return; }
+  mode = mode || 'default';
+  sLastEmailText = emailText;
+  const analysis = analyseEmail(emailText);
+  sLastAnalysis = analysis;
+
+  // Auto-fill fields
+  const detectedName = extractName(emailText);
+  const nameEl = document.getElementById('s-name');
+  if (!nameEl.value && detectedName) nameEl.value = detectedName;
+  const detectedSuburb = extractSuburb(emailText);
+  const suburbEl = document.getElementById('s-suburb');
+  if (!suburbEl.value && detectedSuburb) suburbEl.value = detectedSuburb;
+  if (analysis.hasNeg) sSetSent('Persuadable');
+
+  // Analysis card
+  document.getElementById('s-analysis-card').style.display = 'block';
+  document.getElementById('s-analysis-body').innerHTML = buildAnalysisHTML(analysis, true);
+
+  // CRM
+  showCRM(false, analysis);
+
+  // Draft
+  const draft = buildDraft(emailText, analysis, v('s-name'), mode);
+  document.getElementById('s-reply').textContent = draft;
+  document.getElementById('s-draft-status').innerHTML = '<span style="background:var(--success-bg);color:var(--success);padding:2px 8px;border-radius:5px;font-size:10px;font-weight:700;">DRAFTED</span>';
+
+  ['step1','step2','step3'].forEach(id=>document.getElementById(id).classList.add('done'));
+
+  if (profile.tone) {
+    document.getElementById('s-tone-strip').style.display = 'block';
+    document.getElementById('s-tone-text').textContent = profile.tone;
+  }
+}
+
+function sRegen(mode) { if (!sLastEmailText) { toast('Draft first.'); return; } sDraft(mode); }
+
+function sCopy() {
+  const el = document.getElementById('s-reply');
+  const text = el.innerText || el.textContent;
+  if (!text || text.includes('Your draft will appear')) { toast('Nothing to copy.'); return; }
+  navigator.clipboard.writeText(text).catch(()=>{ const ta=Object.assign(document.createElement('textarea'),{value:text}); document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); });
+  toast('Copied ✓','success');
+}
+
+function sSaveDraft() {
+  const el = document.getElementById('s-reply');
+  const text = el.innerText||el.textContent;
+  if (!text || text.includes('Your draft will appear')) { toast('Nothing to save.'); return; }
+  saved.unshift({ id:Date.now(), subject:v('s-subject'), name:v('s-name')||'Unknown', suburb:v('s-suburb'), sentiment:sCurrentSent, tags: sLastAnalysis?sLastAnalysis.matched.map(m=>m.pol.name.replace(/&amp;/g,'&')):[], text, date:new Date().toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}) });
+  localStorage.setItem('lt_saved',JSON.stringify(saved));
+  renderSaved(false);
+  if (isPane) renderSaved(true);
+  toast('Saved ✓','success');
+}
+
+function sClear() {
+  ['s-email','s-subject','s-name','s-suburb'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('s-reply').innerHTML='<span class="reply-placeholder">Your draft will appear here. Edit directly before copying.</span>';
+  document.getElementById('s-analysis-card').style.display='none';
+  document.getElementById('s-crm-card').style.display='none';
+  document.getElementById('s-draft-status').innerHTML='';
+  document.getElementById('s-tone-strip').style.display='none';
+  ['step1','step2','step3'].forEach(id=>document.getElementById(id).classList.remove('done'));
+  sSetSent('Positive'); sLastAnalysis=null; sLastEmailText='';
+}
+
+function sEmailInput() {
+  const text = document.getElementById('s-email').value;
+  const name = extractName(text); if (!document.getElementById('s-name').value && name) document.getElementById('s-name').value=name;
+  const suburb = extractSuburb(text); if (!document.getElementById('s-suburb').value && suburb) document.getElementById('s-suburb').value=suburb;
+}
+
+function sSetSent(val) { sCurrentSent=val; document.querySelectorAll('#s-sentiment .s-btn').forEach(b=>b.classList.toggle('on',b.dataset.v===val)); }
+
+// ══════════════════════════════════════════════════════════
+//  ANALYSIS & CRM HTML BUILDERS
+// ══════════════════════════════════════════════════════════
+function buildAnalysisHTML(analysis, fullWidth) {
+  let html = '';
+  if (analysis.matched.length) {
+    html += '<div class="section-label">Matched policy areas</div><div class="topic-chips">';
+    analysis.matched.forEach(m => { html += `<div class="topic-chip ${m.score<2?'low':''}">${esc(m.pol.name.replace(/&amp;/g,'&'))} (${m.score})</div>`; });
+    html += '</div>';
+    const svcs = analysis.matched[0].pol.services||[];
+    if (svcs.length) {
+      html += '<div class="referral-box"><div class="referral-title">Service contacts to include</div>';
+      svcs.slice(0,3).forEach(s => { html += `<div class="referral-item"><strong>${esc(s.name)}</strong>${s.number?' — '+esc(s.number):''}</div>`; });
+      html += '</div>';
+    }
+  } else {
+    html += '<div style="color:var(--text-muted);font-size:12px;">No specific policy areas matched.</div>';
+  }
+  const signals = [];
+  if (analysis.hasNeg) signals.push('⚠ Frustrated — lead with acknowledgment');
+  if (analysis.needsService) signals.push('🔧 Service issue — referrals prioritised');
+  if (analysis.hasQuestion) signals.push('❓ Questions raised — address them directly');
+  if (signals.length) html += '<div class="signal-list">'+signals.map(s=>`<div class="signal-item">${s}</div>`).join('')+'</div>';
+  return html;
+}
+
+function showCRM(pane, analysis) {
+  const suburb = pane ? v('pane-suburb') : v('s-suburb');
+  const peninsula = isPeninsula(suburb);
+  const sentiment = pane ? pCurrentSent : sCurrentSent;
+
+  const tags = [];
+  if (analysis.matched.length) tags.push(analysis.matched[0].pol.area||'Issue');
+  if (suburb) tags.push(suburb);
+  tags.push('PENDING');
+
+  let html = `<div class="crm-row"><div class="crm-label">Stage</div><div style="font-size:12px;">Stage 3 — Response Delivered</div></div>`;
+  html += `<div class="crm-row"><div class="crm-label">Sentiment</div><div><span class="crm-tag">${esc(sentiment)}</span></div></div>`;
+  html += `<div class="crm-row"><div class="crm-label">Tags</div><div>${tags.map(t=>`<span class="crm-tag">${esc(t)}</span>`).join('')}</div></div>`;
+  if (peninsula) html += `<div class="crm-row"><div class="crm-label">Priority</div><div><span class="crm-tag crm-peninsula">⚑ Peninsula</span></div></div>`;
+  html += `<div class="crm-next"><div class="crm-next-label">Next — Stage 4 Second Touch (3–4 weeks)</div>"Liesl asked me to follow up — she wanted to make sure the outcome actually worked for you, not just that we sent a letter."</div>`;
+
+  if (pane) {
+    document.getElementById('pane-crm').style.display='block';
+    document.getElementById('pane-crm-body').innerHTML=html;
+  } else {
+    document.getElementById('s-crm-card').style.display='block';
+    document.getElementById('s-crm-body').innerHTML=html;
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  PROFILE
+// ══════════════════════════════════════════════════════════
+function loadDefaultProfile(silent) {
+  profile = {
+    name:'Liesl Tesch AM MP', electorate:'Gosford', party:'NSW Labor', role:'Member for Gosford',
+    phone:'(02) 4322 2066', email:'gosford@parliament.nsw.gov.au',
+    tone:"Warm, direct, and community-focused. Always lead with genuine acknowledgment of the person's situation — never jump straight to what the government has done. Speak plainly, avoid bureaucratic language. Use 'I' and 'we' naturally. Cite specific, real deliverables rather than vague promises. If someone has a service problem, point them to help first.",
+    opening:'Thank you for getting in touch with my office.',
+    offer:"If there's anything more I can do, please reach out to my office directly — we're here to help.",
+    signature:"Warm regards,\nLiesl Tesch AM MP\nMember for Gosford\n(02) 4322 2066 | gosford@parliament.nsw.gov.au",
+  };
+  localStorage.setItem('lt_profile',JSON.stringify(profile));
+  if (!silent) { renderProfileForm(); syncPaneProfile(); toast('Default profile loaded — save when ready.'); }
+}
+
+function renderProfileForm() {
+  const map={name:'mp-name',electorate:'mp-electorate',party:'mp-party',role:'mp-role',phone:'mp-phone',email:'mp-email',tone:'mp-tone',opening:'mp-opening',offer:'mp-offer',signature:'mp-signature'};
+  for(const[k,id]of Object.entries(map)){const el=document.getElementById(id);if(el&&profile[k])el.value=profile[k];}
+}
+
+function syncPaneProfile() {
+  const map={name:'p-mp-name',phone:'p-mp-phone',email:'p-mp-email',tone:'p-mp-tone',opening:'p-mp-opening',offer:'p-mp-offer',signature:'p-mp-signature'};
+  for(const[k,id]of Object.entries(map)){const el=document.getElementById(id);if(el&&profile[k])el.value=profile[k];}
+}
+
+function saveProfile() {
+  profile={name:v('mp-name'),electorate:v('mp-electorate'),party:v('mp-party'),role:v('mp-role'),phone:v('mp-phone'),email:v('mp-email'),tone:v('mp-tone'),opening:v('mp-opening'),offer:v('mp-offer'),signature:v('mp-signature')};
+  localStorage.setItem('lt_profile',JSON.stringify(profile));
+  updateToneStrip(false); toast('Profile saved ✓','success');
+}
+
+function savePaneProfile() {
+  profile={...profile,name:v('p-mp-name'),phone:v('p-mp-phone'),email:v('p-mp-email'),tone:v('p-mp-tone'),opening:v('p-mp-opening'),offer:v('p-mp-offer'),signature:v('p-mp-signature')};
+  localStorage.setItem('lt_profile',JSON.stringify(profile));
+  updateToneStrip(true); toast('Profile saved ✓','success');
+}
+
+function updateToneStrip(pane) {
+  if (!profile.tone) return;
+  if (pane) { const el=document.getElementById('pane-tone-strip'); if(el){el.style.display='block';document.getElementById('pane-tone-text').textContent=profile.tone;} }
+  else { const el=document.getElementById('s-tone-strip'); if(el){el.style.display='block';document.getElementById('s-tone-text').textContent=profile.tone;} }
+}
+
+// ══════════════════════════════════════════════════════════
+//  POLICIES
+// ══════════════════════════════════════════════════════════
+function renderPolicies(pane) {
+  const listId = pane ? 'pane-policy-list' : 's-policy-list';
+  const list = document.getElementById(listId);
+  if (!list) return;
+  if (!policies.length) { list.innerHTML='<div class="empty-state"><div class="empty-icon">📋</div><div>No policies. Load defaults or add one.</div></div>'; return; }
+  list.innerHTML = policies.map((p,i)=>renderPolicyCard(p,i,pane)).join('');
+}
+
+function renderPolicyCard(p, i, pane) {
+  const sid = pane ? 'p' : 's';
+  const kwHtml = (p.keywords||[]).map(k=>`<span class="kw-tag">${esc(k)} <button class="btn-xs" onclick="removeKw(${i},'${esc(k)}',${pane})">×</button></span>`).join('');
+  const winsHtml = (p.wins||[]).map((w,wi)=>`<div class="win-item"><span>✓</span><span style="flex:1;">${esc(w)}</span><button class="btn-xs" onclick="removeWin(${i},${wi},${pane})">×</button></div>`).join('');
+  const svcHtml = (p.services||[]).map((s,si)=>`<div class="service-item"><span>📞</span><span style="flex:1;"><strong>${esc(s.name)}</strong>${s.number?' — '+esc(s.number):''}${s.note?'<br><em style="font-size:11px;">'+esc(s.note)+'</em>':''}</span><button class="btn-xs" onclick="removeSvc(${i},${si},${pane})">×</button></div>`).join('');
+  const uid = `${sid}-pi-${i}`;
+  return `<div class="policy-item" id="${uid}">
+    <div class="policy-header" onclick="togglePi('${uid}')">
+      <div class="policy-header-left">
+        <span class="policy-area-tag">${esc(p.area||'Area')}</span>
+        <span class="policy-name-text">${esc(p.name||'Unnamed').replace(/&amp;/g,'&')}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="policy-meta">${(p.keywords||[]).length}kw · ${(p.wins||[]).length}wins</span>
+        <button class="btn-xs" onclick="removePi(event,${i},${pane})">✕</button>
+        <span class="chev" id="chev-${uid}">▼</span>
+      </div>
+    </div>
+    <div class="policy-body" id="pb-${uid}">
+      <div class="form-grid">
+        <div class="form-group"><label>Name</label><input type="text" value="${esc(p.name||'')}" onchange="policies[${i}].name=this.value"></div>
+        <div class="form-group"><label>Area</label><input type="text" value="${esc(p.area||'')}" onchange="policies[${i}].area=this.value"></div>
+        <div class="form-group full"><label>Key Message</label><textarea rows="2" onchange="policies[${i}].keyMessage=this.value">${esc(p.keyMessage||'')}</textarea></div>
+      </div>
+      <div class="mt-10"><div class="section-label">Keywords</div>
+        <div class="kw-tags">${kwHtml||'<span style="font-size:11px;color:var(--text-muted);">None</span>'}</div>
+        <div class="kw-input-row"><input type="text" id="kwi-${uid}" placeholder="Add keyword…" onkeydown="if(event.key==='Enter')addKw(${i},${pane})" style="max-width:180px;font-size:12px;"><button class="btn btn-outline btn-sm" onclick="addKw(${i},${pane})">Add</button></div>
+      </div>
+      <div class="mt-10"><div class="section-label">Policy Wins</div>
+        <div class="wins-list">${winsHtml||'<div style="font-size:11px;color:var(--text-muted);">None yet</div>'}</div>
+        <div class="kw-input-row"><input type="text" id="wini-${uid}" placeholder="Add a win…" onkeydown="if(event.key==='Enter')addWin(${i},${pane})"><button class="btn btn-outline btn-sm" onclick="addWin(${i},${pane})">Add</button></div>
+      </div>
+      <div class="mt-10"><div class="section-label">Service Referrals</div>
+        <div class="service-list">${svcHtml||'<div style="font-size:11px;color:var(--text-muted);">None yet</div>'}</div>
+        <div style="display:flex;gap:5px;margin-top:6px;flex-wrap:wrap;">
+          <input type="text" id="svci-n-${uid}" placeholder="Service name" style="flex:1;min-width:100px;font-size:12px;">
+          <input type="text" id="svci-p-${uid}" placeholder="Phone" style="width:110px;font-size:12px;">
+          <input type="text" id="svci-d-${uid}" placeholder="Note" style="flex:1;min-width:100px;font-size:12px;">
+          <button class="btn btn-outline btn-sm" onclick="addSvc(${i},${pane})">Add</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function togglePi(uid) {
+  const b=document.getElementById('pb-'+uid); const c=document.getElementById('chev-'+uid);
+  if(b)b.classList.toggle('open'); if(c)c.classList.toggle('open');
+}
+
+function addPolicy() {
+  policies.push({name:'New Policy Area',area:'',keywords:[],wins:[],services:[],keyMessage:''});
+  renderPolicies(isPane); if(!isPane)renderPolicies(false);
+  setTimeout(()=>{ const uid=(isPane?'p':'s')+'-pi-'+(policies.length-1); togglePi(uid); },50);
+}
+
+function removePi(e,i,pane) {
+  e.stopPropagation();
+  if(!confirm('Remove?'))return;
+  policies.splice(i,1); renderPolicies(pane); renderPolicies(!pane);
+}
+
+const sid=(pane)=>pane?'p':'s';
+function addKw(i,pane){ const uid=`${sid(pane)}-pi-${i}`; const el=document.getElementById('kwi-'+uid); const kw=el.value.trim().toLowerCase(); if(!kw)return; if(!policies[i].keywords)policies[i].keywords=[]; if(!policies[i].keywords.includes(kw))policies[i].keywords.push(kw); el.value=''; rerenderPi(i,pane); }
+function removeKw(i,kw,pane){ policies[i].keywords=(policies[i].keywords||[]).filter(k=>k!==kw); rerenderPi(i,pane); }
+function addWin(i,pane){ const uid=`${sid(pane)}-pi-${i}`; const el=document.getElementById('wini-'+uid); const w=el.value.trim(); if(!w)return; if(!policies[i].wins)policies[i].wins=[]; policies[i].wins.push(w); el.value=''; rerenderPi(i,pane); }
+function removeWin(i,wi,pane){ policies[i].wins.splice(wi,1); rerenderPi(i,pane); }
+function addSvc(i,pane){
+  const uid=`${sid(pane)}-pi-${i}`;
+  const name=document.getElementById('svci-n-'+uid).value.trim(); if(!name)return;
+  const num=document.getElementById('svci-p-'+uid).value.trim();
+  const note=document.getElementById('svci-d-'+uid).value.trim();
+  if(!policies[i].services)policies[i].services=[];
+  policies[i].services.push({name,number:num,note});
+  ['svci-n-','svci-p-','svci-d-'].forEach(pre=>{ document.getElementById(pre+uid).value=''; });
+  rerenderPi(i,pane);
+}
+function removeSvc(i,si,pane){ policies[i].services.splice(si,1); rerenderPi(i,pane); }
+
+function rerenderPi(i,pane){
+  const uid=`${sid(pane)}-pi-${i}`;
+  const el=document.getElementById(uid); if(!el)return;
+  const wasOpen=document.getElementById('pb-'+uid).classList.contains('open');
+  el.outerHTML=renderPolicyCard(policies[i],i,pane);
+  if(wasOpen){document.getElementById('pb-'+uid).classList.add('open');document.getElementById('chev-'+uid).classList.add('open');}
+}
+
+function savePolicies(){ localStorage.setItem('lt_policies',JSON.stringify(policies)); toast('Policies saved ✓','success'); }
+
+// ══════════════════════════════════════════════════════════
+//  SAVED DRAFTS
+// ══════════════════════════════════════════════════════════
+function renderSaved(pane) {
+  const listId = pane ? 'pane-saved-list' : 's-saved-list';
+  const list = document.getElementById(listId);
+  if (!list) return;
+  if (!saved.length) { list.innerHTML='<div class="empty-state"><div class="empty-icon">📭</div><div>No saved drafts yet.</div></div>'; return; }
+  list.innerHTML = saved.map((d,i)=>`
+    <div class="saved-item" onclick="loadSavedDraft(${i},${pane})">
+      <div class="flex-between">
+        <div><strong style="font-size:13px;">${esc(d.subject||'Untitled')}</strong> <span style="color:var(--text-muted);font-size:11px;">${esc(d.name)}${d.suburb?', '+esc(d.suburb):''}</span></div>
+        <div style="display:flex;align-items:center;gap:6px;"><span style="font-size:11px;color:var(--text-muted);">${d.date}</span><button class="btn-xs" onclick="deleteSaved(event,${i},${pane})">✕</button></div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:4px;">${esc(d.text.slice(0,100))}…</div>
+      <div class="saved-tags">${(d.tags||[]).map(t=>`<span class="saved-tag">${esc(t)}</span>`).join('')}<span class="saved-tag">${esc(d.sentiment||'')}</span></div>
+    </div>`).join('');
+}
+
+function loadSavedDraft(i,pane) {
+  const d=saved[i];
+  if(pane){ paneTab('draft',document.querySelector('.pane-tab')); document.getElementById('pane-reply').textContent=d.text; document.getElementById('pane-draft-out').style.display='block'; document.getElementById('pane-name').value=d.name; if(d.suburb)document.getElementById('pane-suburb').value=d.suburb; }
+  else { showTab('draft',document.querySelector('.nav-btn')); document.getElementById('s-reply').textContent=d.text; document.getElementById('s-name').value=d.name; if(d.subject)document.getElementById('s-subject').value=d.subject; if(d.suburb)document.getElementById('s-suburb').value=d.suburb; }
+  toast('Draft loaded');
+}
+
+function deleteSaved(e,i,pane){ e.stopPropagation(); saved.splice(i,1); localStorage.setItem('lt_saved',JSON.stringify(saved)); renderSaved(pane); }
+function clearSaved(){ if(!confirm('Delete all saved drafts?'))return; saved=[]; localStorage.setItem('lt_saved','[]'); renderSaved(isPane); if(!isPane)renderSaved(false); }
+
+// ══════════════════════════════════════════════════════════
+//  DEFAULT NSW LABOR POLICIES
+// ══════════════════════════════════════════════════════════
+function loadDefaultPolicies(silent) {
+  policies = [
+    { name:'Public &amp; Social Housing', area:'Housing', keyMessage:"I know the pressure on housing is real — I hear about it regularly from people right across Gosford. The Minns Labor Government has made social housing a genuine priority, and we're backing that with the largest investment in decades.", keywords:['housing','public housing','social housing','housing commission','homes nsw','repair','maintenance','mould','leak','damp','waiting list','housing list','affordable housing','rent','rental','eviction','landlord','tenant','bond','accommodation','homeless','homelessness','housing application','transfer','property manager'], wins:['$6.6 billion Building Homes for NSW — 8,400 new social homes and upgrades to 30,000 existing ones','Major rezoning approved to unlock more homes in Gosford city centre near transport and services','New $4.8M project at Gosford delivering 12 social and 9 affordable homes','New DCJ Service Centre in Tuggerah — one-stop-shop for housing and community services','Ending no-grounds evictions from May 2025 — first major renters\' rights reform in a decade','Rent increases limited to once per year for all lease types (October 2024)','No-fee rent payment options — bank transfer and Centrepay must be offered by landlords'], services:[{name:'Homes NSW',number:'1800 422 322',note:'Maintenance, repairs, housing applications and transfers'},{name:'NSW Fair Trading',number:'13 32 20',note:'Rental disputes, bond claims, tenancy rights'},{name:'DCJ Service Centre Tuggerah',number:'132 111',note:'Walk-in available — housing and community services'},{name:'Tenants\' Union NSW',number:'1800 251 101',note:'Free advice for renters'}] },
+    { name:'Health &amp; Gosford Hospital', area:'Health', keyMessage:"Healthcare on the Central Coast was neglected for too long. Since we came to government in 2023, I've fought hard to restore and improve services at Gosford Hospital and across the region — and there's more to do.", keywords:['health','hospital','gosford hospital','wyong hospital','emergency','ed','emergency department','doctor','gp','bulk bill','mental health','aged care','ambulance','nurse','waiting','specialist','appointment','surgery','maternity','birth','midwife','pharmacy','medication','psychology','counselling','psychiatrist','ward'], wins:['Restored Gosford Hospital\'s obstetrics and gynaecology accreditation — bringing back critical maternity services','Recruited new obstetricians and gynaecologists to Gosford Hospital','53 additional midwives funded across regional LHDs including Central Coast','Began transition to safe staffing levels in hospitals — tackling dangerous understaffing','Largest pay rise for nurses, midwives and health workers in a generation','Ongoing investment in mental health services across the Coast'], services:[{name:'Gosford Hospital',number:'(02) 4320 2111',note:'Main switchboard'},{name:'Central Coast Mental Health Line',number:'1800 011 511',note:'24/7 support'},{name:'Lifeline',number:'13 11 14',note:'Crisis support 24/7'},{name:'Health Care Complaints Commission',number:'1800 043 159',note:'Complaints about health services'}] },
+    { name:'Cost of Living', area:'Economy', keyMessage:"The cost of living is biting hard and I understand how much pressure families are under right now. Our government has delivered real, tangible relief — not just promises.", keywords:['cost of living','bills','energy','electricity','gas','afford','expensive','prices','inflation','groceries','petrol','financial','money','struggle','debt','pay','wages','income','centrelink','welfare','pension','benefit','concession','rebate','hardship'], wins:['Biggest pay rise for NSW public sector workers in more than a decade — delivered in first 100 days','Energy bill relief to reduce the impact of power price increases for households','Rental reforms protecting tenants from unexpected fee hikes and unlawful charges','Concession card holders protected from additional tenancy application fees','Cheaper public transport fares — ongoing cost of living measure'], services:[{name:'ServiceNSW — Cost of Living support',number:'13 77 88',note:'Check what concessions and rebates you\'re entitled to'},{name:'Energy & Water Ombudsman NSW',number:'1800 246 545',note:'Energy billing disputes'},{name:'National Debt Helpline',number:'1800 007 007',note:'Free financial counselling'},{name:'Centrelink',number:'136 240',note:'Social support payments'}] },
+    { name:'Education &amp; Schools', area:'Education', keyMessage:"Every child in Gosford deserves a great public education. I've been pushing hard to make sure our local schools get the resources and support they need.", keywords:['school','education','student','teacher','classroom','learning','principal','enrolment','high school','primary school','disability support','special needs','suspension','bullying','counsellor','public school','naplan','hsc','tutoring','reading','p&c','school funding'], wins:['Public preschools delivered at Tuggerawong and Umina Beach public schools','High school upgrades funded at Lisarow and Narara Valley','Thousands of temporary teachers converted to permanent contracts','Better and Fairer Schools Agreement — $22.7B additional national investment in public schools','More support for students with disability','Paid placements introduced for teaching students'], services:[{name:'NSW Department of Education',number:'1300 679 332',note:'Enrolments, complaints, support'},{name:'Anti-Bullying Hotline',number:'1800 656 767',note:''},{name:'Liesl\'s Office',number:'(02) 4322 2066',note:'We can advocate with the Department on your behalf'}] },
+    { name:'TAFE &amp; Skills', area:'Education', keyMessage:"TAFE is central to the future of our Coast — helping people get the skills to find great jobs right here rather than having to leave. We just committed $38.3 million to overhaul training across the region.", keywords:['tafe','vocational','training','skills','certificate','diploma','apprentice','apprenticeship','traineeship','trade','course','fee free','free tafe','career','retraining','upskill'], wins:['$38.3 million to overhaul skills training at TAFE NSW Gosford, Ourimbah, and Wyong','New state-of-the-art simulated health hub at TAFE Gosford for aged care, disability and nursing training','New Aboriginal Yarning Circle at TAFE Gosford','Fee-free TAFE — removing cost as a barrier to training and upskilling','Industry-aligned facilities ensuring training leads to real jobs on the Coast'], services:[{name:'TAFE NSW',number:'131 601',note:'Gosford, Ourimbah, Wyong campuses — enrolments and fee-free eligibility'}] },
+    { name:'University — Gosford Campus', area:'Education', keyMessage:"For the first time, Gosford is getting its own university campus. This is something our community has needed and deserved for years, and we're delivering it.", keywords:['university','uni','newcastle university','uon','campus','degree','higher education','undergraduate','postgraduate'], wins:['$67 million University of Newcastle Central Coast Campus at 305 Mann Street, Gosford — under construction now','Reached \'topping out\' milestone March 2025 — on track for completion late 2025/early 2026','Co-located near Gosford Hospital and UON Clinical School','University access for students who previously had to commute to Newcastle or Sydney'], services:[{name:'University of Newcastle',number:'1800 763 126',note:'Admissions and enrolments'}] },
+    { name:'Transport &amp; Roads', area:'Transport', keyMessage:"Getting around the Coast — by bus, train, or road — has to be better. We're investing in the infrastructure and services that make a practical difference to everyday life.", keywords:['bus','train','transport','road','traffic','pothole','highway','pacific highway','rail','station','timetable','route','service','commute','car park','cycling','footpath','bridge','traffic light','speeding','parking'], wins:['$150 million state-wide investment expanding bus routes in regional areas including Central Coast','Road pothole funding to address the maintenance backlog','Ongoing advocacy for improved Central Coast rail timetables and capacity','Transport connectivity improvements for outer suburban communities'], services:[{name:'Transport for NSW',number:'13 22 32',note:'Bus, train, and transport complaints or enquiries'},{name:'NSW Road Hazard Reporting',number:'',note:'service.nsw.gov.au — search \'report a road hazard\''},{name:'Central Coast Council',number:'1300 463 954',note:'Local road maintenance issues'}] },
+    { name:'Disability &amp; Inclusion', area:'Community', keyMessage:"This is an issue close to my heart. As Parliamentary Secretary for Disability Inclusion, I'm committed to making sure every person with disability on the Central Coast has the support and inclusion they deserve.", keywords:['disability','ndis','scheme','support','carer','accessibility','inclusion','mental illness','wheelchair','hearing','vision','autism','adhd','plan','review','plan manager','support coordinator','sda','sil','accommodation','disability support','respite'], wins:['Liesl appointed Parliamentary Secretary for Disability Inclusion — a Central Coast voice at the cabinet table','Disability Inclusion Act reforms strengthening rights and accountability','Advocacy to fix NDIS plan management issues and support underspend','Commitment to better community participation and accessible infrastructure on the Coast'], services:[{name:'NDIS',number:'1800 800 110',note:'Plan enquiries, complaints, and access requests'},{name:'Disability Gateway',number:'1800 643 787',note:'Finding local disability services'},{name:'Carers Gateway',number:'1800 422 737',note:'Support for carers'},{name:'Liesl\'s Office',number:'(02) 4322 2066',note:'Liesl can personally advocate on NDIS matters'}] },
+    { name:'Environment &amp; Planning', area:'Environment', keyMessage:"Protecting the Central Coast's natural environment while planning for sustainable growth is something I feel strongly about. We're committed to getting the balance right.", keywords:['environment','planning','development','da','development application','rezoning','heritage','national park','beach','flooding','coastal','climate','koala','fauna','flora','tree','clearing','biodiversity','pollution','noise','strata','council'], wins:['Gosford city centre rezoning — delivering more homes near transport, not suburban sprawl','Nature Positive Plan to protect biodiversity at state and national level','Coastal management reforms to better protect beachfront communities','Aboriginal land and cultural heritage protections strengthened'], services:[{name:'NSW Department of Planning',number:'1300 305 695',note:'Development enquiries and complaints'},{name:'Environment Protection Authority',number:'131 555',note:'Pollution and environmental complaints'},{name:'Central Coast Council',number:'1300 463 954',note:'Local DA and planning enquiries'}] },
+    { name:'Community Services &amp; Families', area:'Community', keyMessage:"Everyone in our community deserves support when they need it — whether that's families under pressure, seniors, carers, or people doing it tough. I've been fighting to make sure services are available right here on the Coast.", keywords:['family','children','child','domestic violence','dv','centrelink','senior','aged','carer','grief','suicide','homeless','youth','elder abuse','community','charity','food bank','hardship','crisis','support','welfare'], wins:['New DCJ Service Centre in Tuggerah — housing, community services, and family support under one roof','Increased funding for domestic violence support services','New funding categories for seniors\' social connection programs on the Coast','Liesl appointed Parliamentary Secretary for Families — directly connected to these issues in government'], services:[{name:'DCJ Tuggerah Service Centre',number:'132 111',note:'Walk-in available — housing, family, and community support'},{name:'1800RESPECT',number:'1800 737 732',note:'Domestic violence support 24/7'},{name:'SafeLink NSW',number:'1800 512 850',note:'NSW DV support line'},{name:'Lifeline',number:'13 11 14',note:'Crisis support 24/7'},{name:'Kids Helpline',number:'1800 551 800',note:'Under 25s — 24/7'}] },
+  ];
+  if (!silent) { renderPolicies(isPane); renderPolicies(!isPane); toast('NSW Labor policies loaded — save when ready.'); }
+  else localStorage.setItem('lt_policies', JSON.stringify(policies));
+}
+
+// ══════════════════════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════════════════════
+function v(id){ const el=document.getElementById(id); return el?el.value.trim():''; }
+function esc(s){ if(!s)return''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function toast(msg,type){ const el=document.getElementById('toast'); el.textContent=msg; el.className='toast show'+(type?' '+type:''); setTimeout(()=>el.className='toast',2800); }
+</script>
+</body>
+</html>
